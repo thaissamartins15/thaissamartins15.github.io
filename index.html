@@ -184,11 +184,15 @@
         const scoreText = document.getElementById('score-text');
 
         // --- State Variables ---
+        let shuffledQuestions = [];
         let currentQuestionIndex = 0;
         let score = 0;
 
         // --- Functions ---
         function startQuiz() {
+            // Shuffle the questions
+            shuffledQuestions = [...quizData].sort(() => Math.random() - 0.5);
+            
             currentQuestionIndex = 0;
             score = 0;
             resultContainer.classList.add('hidden');
@@ -199,7 +203,7 @@
 
         function showQuestion() {
             resetState();
-            const currentQuestion = quizData[currentQuestionIndex];
+            const currentQuestion = shuffledQuestions[currentQuestionIndex];
             questionText.innerText = currentQuestion.question;
             scenarioText.innerText = currentQuestion.scenario;
             
@@ -214,7 +218,7 @@
                 answerButtons.appendChild(button);
             });
 
-            progressText.innerText = `Caso ${currentQuestionIndex + 1} de ${quizData.length}`;
+            progressText.innerText = `Caso ${currentQuestionIndex + 1} de ${shuffledQuestions.length}`;
         }
 
         function resetState() {
@@ -237,7 +241,7 @@
                 button.disabled = true;
             });
 
-            if (quizData.length > currentQuestionIndex + 1) {
+            if (shuffledQuestions.length > currentQuestionIndex + 1) {
                 nextBtn.classList.remove('hidden');
             } else {
                 setTimeout(showResult, 1200);
@@ -262,10 +266,10 @@
             quizContainer.classList.add('hidden');
             resultContainer.classList.remove('hidden');
             
-            let message = `Você resolveu ${score} de ${quizData.length} casos. `;
-            if (score === quizData.length) {
+            let message = `Você resolveu ${score} de ${shuffledQuestions.length} casos. `;
+            if (score === shuffledQuestions.length) {
                 message += "Impressionante! Sua perícia é de um verdadeiro mestre da entomologia forense!";
-            } else if (score >= quizData.length / 2) {
+            } else if (score >= shuffledQuestions.length / 2) {
                 message += "Ótimo trabalho, detetive. As evidências não mentem para você.";
             } else {
                 message += "Um começo promissor. Continue afiando seus instintos e conhecimento.";
